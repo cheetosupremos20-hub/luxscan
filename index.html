@@ -33,7 +33,6 @@
     overflow-x: hidden;
   }
 
-  /* Grid de fondo */
   body::before {
     content: '';
     position: fixed;
@@ -53,7 +52,7 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
     padding-bottom: 24px;
     border-bottom: 1px solid var(--border);
   }
@@ -65,13 +64,8 @@
     font-size: 22px;
     flex-shrink: 0;
   }
-  .logo-text h1 {
-    font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
-    color: var(--text);
-  }
-  .logo-text p {
-    font-size: 12px; color: var(--muted); margin-top: 1px;
-  }
+  .logo-text h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo-text p { font-size: 12px; color: var(--muted); margin-top: 1px; }
   .status-pill {
     margin-left: auto;
     font-family: var(--mono);
@@ -82,13 +76,58 @@
     color: var(--muted);
     display: flex; align-items: center; gap: 6px;
   }
-  .status-pill .dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--muted);
-    transition: background 0.3s;
-  }
+  .status-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); transition: background 0.3s; }
   .status-pill.active .dot { background: var(--ok); box-shadow: 0 0 6px var(--ok); }
   .status-pill.active { color: var(--ok); border-color: var(--ok); }
+
+  /* Panel API Key */
+  .apikey-panel {
+    background: var(--surface);
+    border: 1px solid var(--accent2);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .apikey-panel.connected {
+    border-color: var(--ok);
+  }
+  .apikey-icon { font-size: 24px; flex-shrink: 0; }
+  .apikey-info { flex: 1; min-width: 200px; }
+  .apikey-info h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .apikey-info p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .apikey-input-wrap { display: flex; gap: 8px; flex: 2; min-width: 260px; }
+  .apikey-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    outline: none;
+    transition: border 0.2s;
+  }
+  .apikey-input:focus { border-color: var(--accent); }
+  .apikey-btn {
+    background: var(--accent2);
+    color: #fff;
+    border: none; cursor: pointer;
+    font-family: var(--font);
+    font-weight: 600; font-size: 13px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .apikey-btn:hover { opacity: 0.85; }
+  .apikey-status { font-size: 12px; font-weight: 600; }
+  .apikey-status.ok { color: var(--ok); }
+  .apikey-status.err { color: var(--danger); }
 
   /* Layout principal */
   .main-grid {
@@ -107,12 +146,7 @@
     overflow: hidden;
     position: relative;
   }
-  .camera-preview {
-    width: 100%; aspect-ratio: 4/3;
-    object-fit: cover;
-    display: block;
-    background: #000;
-  }
+  .camera-preview { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; background: #000; }
   canvas#analyzeCanvas { display: none; }
   .camera-overlay {
     position: absolute; inset: 0;
@@ -140,10 +174,7 @@
   }
   .scan-btn:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(0,229,255,0.3); }
   .scan-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-  .scan-btn.scanning {
-    background: var(--warn);
-    animation: pulse 1.5s infinite;
-  }
+  .scan-btn.scanning { background: var(--warn); animation: pulse 1.5s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
 
   .camera-controls {
@@ -153,7 +184,7 @@
   }
   .scan-count { font-family: var(--mono); font-size: 12px; color: var(--muted); }
 
-  /* Métricas numéricas */
+  /* Métricas */
   .metrics-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -161,155 +192,61 @@
     padding: 20px;
     display: flex; flex-direction: column; gap: 16px;
   }
-  .metric-row {
-    display: flex; flex-direction: column; gap: 6px;
-  }
+  .metric-row { display: flex; flex-direction: column; gap: 6px; }
   .metric-label {
     font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
     text-transform: uppercase; color: var(--muted);
-    display: flex; align-items: center; justify-content: space-between;
   }
-  .metric-value {
-    font-family: var(--mono);
-    font-size: 28px; font-weight: 700;
-    color: var(--accent);
-    line-height: 1;
-  }
+  .metric-value { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--accent); line-height: 1; }
   .metric-value.warn { color: var(--warn); }
-  .metric-value.danger { color: var(--danger); }
   .metric-value.ok { color: var(--ok); }
   .metric-unit { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 4px; }
-  .metric-bar {
-    height: 4px; background: var(--border); border-radius: 4px; overflow: hidden;
-  }
-  .metric-bar-fill {
-    height: 100%; border-radius: 4px;
-    background: var(--accent);
-    transition: width 0.8s ease, background 0.5s;
-    width: 0%;
-  }
+  .metric-bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .metric-bar-fill { height: 100%; border-radius: 4px; background: var(--accent); transition: width 0.8s ease, background 0.5s; width: 0%; }
   .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
 
-  /* Tipo de luz */
-  .light-type-row {
-    display: flex; align-items: center; gap: 10px;
-  }
-  .light-badge {
-    padding: 4px 14px;
-    border-radius: 100px;
-    font-size: 13px; font-weight: 600;
-    background: var(--border);
-    color: var(--muted);
-    transition: all 0.4s;
-  }
+  .light-type-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .light-badge { padding: 4px 14px; border-radius: 100px; font-size: 13px; font-weight: 600; background: var(--border); color: var(--muted); transition: all 0.4s; }
   .light-badge.active-natural { background: rgba(16,185,129,0.15); color: var(--ok); border: 1px solid var(--ok); }
   .light-badge.active-artificial { background: rgba(245,158,11,0.15); color: var(--warn); border: 1px solid var(--warn); }
   .light-badge.active-mixed { background: rgba(0,229,255,0.12); color: var(--accent); border: 1px solid var(--accent); }
-  .light-badge.active-blue { background: rgba(124,58,237,0.15); color: #a78bfa; border: 1px solid #7c3aed; }
 
-  /* Panel de IA */
-  .ai-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 16px;
-  }
-  .ai-panel-header {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 16px;
-  }
-  .ai-panel-header h2 { font-size: 15px; font-weight: 600; }
-  .ai-tag {
-    font-family: var(--mono); font-size: 10px; font-weight: 700;
-    padding: 2px 8px; border-radius: 4px;
-    background: linear-gradient(135deg, var(--accent2), var(--accent));
-    color: #fff; letter-spacing: 0.05em;
-  }
-
-  .ai-content {
-    min-height: 80px;
-    font-size: 14px; line-height: 1.7; color: var(--text);
-  }
-  .ai-content.placeholder { color: var(--muted); font-style: italic; font-size: 13px; }
-
-  /* Fatiga visual gauge */
-  .fatigue-gauge {
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    padding: 4px 0;
-  }
-  .gauge-wrap {
-    position: relative; width: 120px; height: 66px; overflow: hidden;
-  }
+  /* Gauge fatiga */
+  .fatigue-gauge { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 0; }
+  .gauge-wrap { position: relative; width: 120px; height: 66px; overflow: hidden; }
   .gauge-bg {
     position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
     width: 120px; height: 120px; border-radius: 50%;
-    background: conic-gradient(
-      var(--ok) 0deg 60deg,
-      var(--warn) 60deg 120deg,
-      var(--danger) 120deg 180deg,
-      transparent 180deg 360deg
-    );
+    background: conic-gradient(var(--ok) 0deg 60deg, var(--warn) 60deg 120deg, var(--danger) 120deg 180deg, transparent 180deg 360deg);
     clip-path: inset(0 0 50% 0);
   }
-  .gauge-center {
-    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 80px; height: 80px; border-radius: 50%;
-    background: var(--surface);
-    bottom: -20px;
-  }
-  .gauge-needle {
-    position: absolute; bottom: 2px; left: 50%;
-    width: 2px; height: 52px;
-    background: white;
-    transform-origin: bottom center;
-    transform: translateX(-50%) rotate(-90deg);
-    border-radius: 2px;
-    transition: transform 1s ease;
-  }
-  .gauge-label {
-    font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: center;
-  }
-  .gauge-value-text {
-    font-family: var(--mono); font-size: 20px; font-weight: 700;
-    color: var(--text);
-  }
+  .gauge-center { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); width: 80px; height: 80px; border-radius: 50%; background: var(--surface); }
+  .gauge-needle { position: absolute; bottom: 2px; left: 50%; width: 2px; height: 52px; background: white; transform-origin: bottom center; transform: translateX(-50%) rotate(-90deg); border-radius: 2px; transition: transform 1s ease; }
+  .gauge-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: center; }
+  .gauge-value-text { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--text); }
+
+  /* Panel IA */
+  .ai-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+  .ai-panel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .ai-panel-header h2 { font-size: 15px; font-weight: 600; }
+  .ai-tag { font-family: var(--mono); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; background: linear-gradient(135deg, var(--accent2), var(--accent)); color: #fff; }
+  .ai-content { min-height: 80px; font-size: 14px; line-height: 1.7; color: var(--text); }
+  .ai-content.placeholder { color: var(--muted); font-style: italic; font-size: 13px; }
 
   /* Recomendaciones */
-  .recs-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-  }
+  .recs-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
   .recs-card h2 { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
-  .rec-item {
-    display: flex; gap: 12px; align-items: flex-start;
-    padding: 12px 0; border-bottom: 1px solid var(--border);
-  }
+  .rec-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border); }
   .rec-item:last-child { border-bottom: none; padding-bottom: 0; }
   .rec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
-  .rec-text { font-size: 13px; line-height: 1.6; color: var(--text); }
   .rec-title { font-weight: 600; margin-bottom: 2px; font-size: 13px; }
-  .rec-sub { color: var(--muted); font-size: 12px; }
-
+  .rec-sub { color: var(--muted); font-size: 12px; line-height: 1.5; }
   .recs-placeholder { color: var(--muted); font-size: 13px; font-style: italic; }
 
-  /* Spinner */
-  .spinner {
-    display: inline-block; width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.2);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    vertical-align: middle;
-  }
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.2); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .bottom-note {
-    text-align: center; font-size: 11px; color: var(--muted);
-    margin-top: 24px; line-height: 1.6;
-  }
+  .bottom-note { text-align: center; font-size: 11px; color: var(--muted); margin-top: 24px; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -327,6 +264,20 @@
     </div>
   </header>
 
+  <!-- Panel API Key -->
+  <div class="apikey-panel" id="apikeyPanel">
+    <div class="apikey-icon">🔑</div>
+    <div class="apikey-info">
+      <h3>Clave de API de Claude</h3>
+      <p>Necesaria para el análisis con IA. Obtén tu clave gratis en <strong>console.anthropic.com</strong></p>
+    </div>
+    <div class="apikey-input-wrap">
+      <input class="apikey-input" id="apikeyInput" type="password" placeholder="sk-ant-api03-..." />
+      <button class="apikey-btn" onclick="saveApiKey()">Conectar</button>
+    </div>
+    <span class="apikey-status" id="apikeyStatus"></span>
+  </div>
+
   <div class="main-grid">
     <!-- Cámara -->
     <div class="camera-card">
@@ -336,7 +287,7 @@
         <div class="icon">📷</div>
         <h3>Activar cámara</h3>
         <p>Apunta la cámara al ambiente que quieres analizar</p>
-        <button class="scan-btn" id="startCameraBtn" onclick="startCamera()">Activar cámara</button>
+        <button class="scan-btn" onclick="startCamera()">Activar cámara</button>
       </div>
       <div class="camera-controls">
         <span class="scan-count" id="scanCount">— análisis realizados</span>
@@ -349,9 +300,7 @@
     <!-- Métricas -->
     <div class="metrics-card">
       <div class="metric-row">
-        <div class="metric-label">
-          <span>Luminosidad estimada</span>
-        </div>
+        <div class="metric-label">Luminosidad estimada</div>
         <div class="metric-value" id="luxValue">—<span class="metric-unit">lux</span></div>
         <div class="metric-bar"><div class="metric-bar-fill" id="luxBar"></div></div>
       </div>
@@ -371,7 +320,6 @@
         </div>
       </div>
       <hr class="divider">
-      <!-- Gauge fatiga -->
       <div class="metric-row">
         <div class="metric-label">Índice de fatiga visual</div>
         <div class="fatigue-gauge">
@@ -394,7 +342,7 @@
       <span class="ai-tag">IA</span>
     </div>
     <div class="ai-content placeholder" id="aiContent">
-      Activa la cámara y presiona <strong>Analizar</strong> para obtener un diagnóstico personalizado de tu ambiente de iluminación.
+      Conecta tu API key y activa la cámara para obtener un diagnóstico personalizado de tu ambiente.
     </div>
   </div>
 
@@ -415,13 +363,35 @@
 <script>
 let stream = null;
 let scanCount = 0;
+let apiKey = '';
+
 const video = document.getElementById('videoFeed');
 const canvas = document.getElementById('analyzeCanvas');
 const ctx = canvas.getContext('2d');
 
+function saveApiKey() {
+  const input = document.getElementById('apikeyInput').value.trim();
+  const statusEl = document.getElementById('apikeyStatus');
+  const panel = document.getElementById('apikeyPanel');
+
+  if (!input.startsWith('sk-ant-')) {
+    statusEl.textContent = '❌ Clave inválida';
+    statusEl.className = 'apikey-status err';
+    return;
+  }
+
+  apiKey = input;
+  statusEl.textContent = '✅ Conectada';
+  statusEl.className = 'apikey-status ok';
+  panel.classList.add('connected');
+  document.getElementById('apikeyInput').value = '••••••••••••••••••••';
+}
+
 async function startCamera() {
   try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } } });
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } }
+    });
     video.srcObject = stream;
     document.getElementById('cameraOverlay').classList.add('hidden');
     document.getElementById('scanBtn').disabled = false;
@@ -437,13 +407,13 @@ function captureFrame() {
   canvas.width = video.videoWidth || 640;
   canvas.height = video.videoHeight || 480;
   ctx.drawImage(video, 0, 0);
-  return canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
+  return ctx.getImageData(0, 0, canvas.width, canvas.height);
 }
 
 function analyzePixels(imageData) {
   const data = imageData.data;
-  let r=0,g=0,b=0,count=0;
-  for(let i=0;i<data.length;i+=4*8) { // sample each 8 pixels
+  let r=0, g=0, b=0, count=0;
+  for(let i=0; i<data.length; i+=4*8) {
     r+=data[i]; g+=data[i+1]; b+=data[i+2]; count++;
   }
   r=r/count; g=g/count; b=b/count;
@@ -451,14 +421,13 @@ function analyzePixels(imageData) {
   // Luminosidad (luma)
   const luma = 0.299*r + 0.587*g + 0.114*b;
 
-  // Estimación de lux (muy aproximada, escala logarítmica)
-  // 0-50 muy oscuro, 50-200 interior, 200+ bien iluminado
-  const lux = Math.round(Math.pow(luma/255, 1.8) * 1200);
+  // Estimación de lux calibrada
+  const lux = Math.round(Math.pow(luma/255, 2.2) * 35000);
 
   // Temperatura de color estimada por ratio R/B
   let kelvin;
   const rb = r/(b+1);
-  if(rb > 2.2)       kelvin = 2700 + Math.round((rb-2.2)*200); // incandescente
+  if(rb > 2.2)       kelvin = 2700 + Math.round((rb-2.2)*200);
   else if(rb > 1.6)  kelvin = 3500 + Math.round((2.2-rb)*1000);
   else if(rb > 1.1)  kelvin = 5000 + Math.round((1.6-rb)*2000);
   else               kelvin = 6500 + Math.round((1.1-rb)*1500);
@@ -466,17 +435,16 @@ function analyzePixels(imageData) {
 
   // Tipo de luz
   let lightType;
-  const greenBias = g/(r+b+1);
   if(b > r*1.1 && kelvin > 5500)      lightType = 'natural';
   else if(r > b*1.3 && kelvin < 4000) lightType = 'artificial';
   else                                  lightType = 'mixed';
 
   // Índice de fatiga 0-100
   let fatigue = 0;
-  if(lux < 200)     fatigue += 25;
-  else if(lux > 1000) fatigue += 20;
-  if(kelvin < 3000) fatigue += 20;
-  if(kelvin > 6500) fatigue += 20;
+  if(lux < 200)       fatigue += 25;
+  else if(lux > 10000) fatigue += 20;
+  if(kelvin < 3000)   fatigue += 20;
+  if(kelvin > 6500)   fatigue += 20;
   if(lightType === 'artificial') fatigue += 15;
   fatigue = Math.min(100, Math.max(0, fatigue + Math.round(Math.random()*5)));
 
@@ -486,9 +454,9 @@ function analyzePixels(imageData) {
 function updateUI(m) {
   // Lux
   const luxEl = document.getElementById('luxValue');
-  luxEl.innerHTML = `${m.lux}<span class="metric-unit">lux</span>`;
+  luxEl.innerHTML = `${m.lux.toLocaleString('es')}<span class="metric-unit">lux</span>`;
   luxEl.className = 'metric-value' + (m.lux<200?' warn': m.lux>800?' ok':'');
-  document.getElementById('luxBar').style.width = Math.min(100, (m.lux/1500)*100)+'%';
+  document.getElementById('luxBar').style.width = Math.min(100, (m.lux/30000)*100)+'%';
   document.getElementById('luxBar').style.background = m.lux<200?'#f59e0b':m.lux>800?'#10b981':'#00e5ff';
 
   // Temp
@@ -499,23 +467,26 @@ function updateUI(m) {
   document.getElementById('tempBar').style.width = tPct+'%';
 
   // Tipo
-  ['Natural','Artificial','Mixed'].forEach(t => {
-    const el = document.getElementById('badge'+t.charAt(0).toUpperCase()+t.slice(1));
-    el.className = 'light-badge';
-  });
-  if(m.lightType==='natural')     document.getElementById('badgeNatural').className='light-badge active-natural';
-  if(m.lightType==='artificial')  document.getElementById('badgeArtificial').className='light-badge active-artificial';
-  if(m.lightType==='mixed')       document.getElementById('badgeMixed').className='light-badge active-mixed';
+  document.getElementById('badgeNatural').className = 'light-badge';
+  document.getElementById('badgeArtificial').className = 'light-badge';
+  document.getElementById('badgeMixed').className = 'light-badge';
+  if(m.lightType==='natural')    document.getElementById('badgeNatural').className='light-badge active-natural';
+  if(m.lightType==='artificial') document.getElementById('badgeArtificial').className='light-badge active-artificial';
+  if(m.lightType==='mixed')      document.getElementById('badgeMixed').className='light-badge active-mixed';
 
-  // Gauge fatiga
+  // Gauge
   const deg = -90 + (m.fatigue/100)*180;
   document.getElementById('gaugeNeedle').style.transform = `translateX(-50%) rotate(${deg}deg)`;
   document.getElementById('fatigueValue').textContent = m.fatigue+'%';
-  const lbl = m.fatigue<30?'✅ Bajo':m.fatigue<60?'⚠️ Moderado':'🔴 Alto';
-  document.getElementById('fatigueLabel').textContent = lbl;
+  document.getElementById('fatigueLabel').textContent = m.fatigue<30?'✅ Bajo':m.fatigue<60?'⚠️ Moderado':'🔴 Alto';
 }
 
 async function analyzeScene() {
+  if (!apiKey) {
+    alert('Primero conecta tu API key de Claude en la parte superior.');
+    return;
+  }
+
   const btn = document.getElementById('scanBtn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Analizando...';
@@ -533,46 +504,47 @@ async function analyzeScene() {
     return;
   }
 
-  // Llamar a Claude API
   document.getElementById('aiContent').className = 'ai-content placeholder';
   document.getElementById('aiContent').innerHTML = '<span class="spinner"></span> Generando análisis con IA...';
 
-  const prompt = `Eres un experto en ergonomía visual y diseño de ambientes de iluminación. Analiza los siguientes datos de un ambiente capturado por cámara y proporciona:
+  const prompt = `Eres un experto en ergonomía visual y diseño de ambientes de iluminación. Analiza los siguientes datos de un ambiente capturado por cámara.
 
-1. Un análisis descriptivo breve del ambiente (2-3 oraciones, sin bullets).
-2. Un JSON con las recomendaciones estructurado así (responde SOLO el JSON, sin markdown):
-{"analysis":"texto breve del ambiente","fatigue_level":"Bajo|Moderado|Alto","recommendations":[{"icon":"emoji","title":"título corto","description":"explicación de 1-2 oraciones"}]}
+Responde SOLO con un JSON válido, sin markdown, sin texto extra, con esta estructura exacta:
+{"analysis":"texto descriptivo del ambiente en 2-3 oraciones","recommendations":[{"icon":"emoji","title":"título corto","description":"explicación de 1-2 oraciones"}]}
 
 Datos del ambiente:
-- Luminosidad estimada: ${metrics.lux} lux
+- Luminosidad: ${metrics.lux} lux
 - Temperatura de color: ${metrics.kelvin} K
 - Tipo de iluminación: ${metrics.lightType === 'natural' ? 'Natural' : metrics.lightType === 'artificial' ? 'Artificial' : 'Mixta'}
-- Índice de fatiga visual estimado: ${metrics.fatigue}%
-- Valores RGB promedio del ambiente: R=${metrics.r}, G=${metrics.g}, B=${metrics.b}
-- Brillo medio: ${metrics.luma}/255
+- Índice de fatiga visual: ${metrics.fatigue}%
+- RGB promedio: R=${metrics.r}, G=${metrics.g}, B=${metrics.b}
 
-Genera exactamente 3 a 4 recomendaciones prácticas y específicas para reducir la fatiga visual en este ambiente. Responde en español.`;
+Genera exactamente 3 recomendaciones prácticas para reducir la fatiga visual. Responde en español.`;
 
   try {
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: 1000,
         messages: [{ role: "user", content: prompt }]
       })
     });
+
     const data = await response.json();
     const text = data.content?.map(i=>i.text||'').join('') || '';
     const clean = text.replace(/```json|```/g,'').trim();
     const parsed = JSON.parse(clean);
 
-    // Mostrar análisis
     document.getElementById('aiContent').className = 'ai-content';
     document.getElementById('aiContent').textContent = parsed.analysis;
 
-    // Mostrar recomendaciones
     const recsHtml = parsed.recommendations.map(r => `
       <div class="rec-item">
         <div class="rec-icon">${r.icon}</div>
@@ -589,7 +561,7 @@ Genera exactamente 3 a 4 recomendaciones prácticas y específicas para reducir 
 
   } catch(e) {
     document.getElementById('aiContent').className = 'ai-content';
-    document.getElementById('aiContent').textContent = 'No se pudo obtener el análisis de IA. Verifica tu conexión e intenta de nuevo.';
+    document.getElementById('aiContent').textContent = 'Error al conectar con la IA. Verifica tu API key y conexión a internet.';
   }
 
   btn.disabled = false;
@@ -599,3 +571,4 @@ Genera exactamente 3 a 4 recomendaciones prácticas y específicas para reducir 
 </script>
 </body>
 </html>
+
