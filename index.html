@@ -247,6 +247,45 @@
   .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.2); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* Proyección de fatiga */
+  .projection-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .projection-card h2 { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
+  .projection-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 500px) { .projection-grid { grid-template-columns: repeat(2, 1fr); } }
+  .proj-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+    transition: border 0.4s;
+  }
+  .proj-item.low  { border-color: var(--ok); }
+  .proj-item.mid  { border-color: var(--warn); }
+  .proj-item.high { border-color: var(--danger); }
+  .proj-time { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .proj-value { font-family: var(--mono); font-size: 22px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+  .proj-value.low  { color: var(--ok); }
+  .proj-value.mid  { color: var(--warn); }
+  .proj-value.high { color: var(--danger); }
+  .proj-label { font-size: 11px; color: var(--muted); }
+  .proj-bar { height: 3px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+  .proj-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; width: 0%; }
+  .proj-bar-fill.low  { background: var(--ok); }
+  .proj-bar-fill.mid  { background: var(--warn); }
+  .proj-bar-fill.high { background: var(--danger); }
+  .projection-placeholder { color: var(--muted); font-size: 13px; font-style: italic; }
+
   .bottom-note { text-align: center; font-size: 11px; color: var(--muted); margin-top: 24px; line-height: 1.6; }
 </style>
 </head>
@@ -344,6 +383,14 @@
     </div>
     <div class="ai-content placeholder" id="aiContent">
       Conecta tu API key y activa la cámara para obtener un diagnóstico personalizado de tu ambiente.
+    </div>
+  </div>
+
+  <!-- Proyección de fatiga -->
+  <div class="projection-card">
+    <h2>⏱️ Proyección de fatiga visual</h2>
+    <div id="projectionContent">
+      <p class="projection-placeholder">Analiza un ambiente para ver la proyección de fatiga.</p>
     </div>
   </div>
 
@@ -480,6 +527,31 @@ function updateUI(m) {
   document.getElementById('gaugeNeedle').style.transform = `translateX(-50%) rotate(${deg}deg)`;
   document.getElementById('fatigueValue').textContent = m.fatigue+'%';
   document.getElementById('fatigueLabel').textContent = m.fatigue<30?'✅ Bajo':m.fatigue<60?'⚠️ Moderado':'🔴 Alto';
+  updateProjection(m.fatigue);
+}
+
+function updateProjection(baseFatigue) {
+  const times = [
+    { label: '10 min', factor: 0.15 },
+    { label: '30 min', factor: 0.35 },
+    { label: '1 hora', factor: 0.65 },
+    { label: '3 horas', factor: 1.0 }
+  ];
+
+  const html = '<div class="projection-grid">' + times.map(t => {
+    // Fatigue grows with exposure time, capped at 100
+    const projected = Math.min(100, Math.round(baseFatigue + (100 - baseFatigue) * t.factor * (baseFatigue / 60)));
+    const cls = projected < 30 ? 'low' : projected < 60 ? 'mid' : 'high';
+    const lbl = projected < 30 ? 'Bajo' : projected < 60 ? 'Moderado' : 'Alto';
+    return `<div class="proj-item ${cls}">
+      <div class="proj-time">${t.label}</div>
+      <div class="proj-value ${cls}">${projected}%</div>
+      <div class="proj-label">${lbl}</div>
+      <div class="proj-bar"><div class="proj-bar-fill ${cls}" style="width:${projected}%"></div></div>
+    </div>`;
+  }).join('') + '</div>';
+
+  document.getElementById('projectionContent').innerHTML = html;
 }
 
 async function analyzeScene() {
