@@ -286,6 +286,54 @@
   .proj-bar-fill.high { background: var(--danger); }
   .projection-placeholder { color: var(--muted); font-size: 13px; font-style: italic; }
 
+  /* Alerta de fatiga */
+  .fatigue-alert-overlay {
+    position: fixed; inset: 0;
+    background: rgba(10,15,30,0.85);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s;
+  }
+  .fatigue-alert-overlay.show {
+    opacity: 1; pointer-events: all;
+  }
+  .fatigue-alert-box {
+    background: var(--surface);
+    border: 1px solid var(--danger);
+    border-radius: 20px;
+    padding: 32px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(239,68,68,0.3);
+    transform: scale(0.9);
+    transition: transform 0.4s;
+  }
+  .fatigue-alert-overlay.show .fatigue-alert-box {
+    transform: scale(1);
+  }
+  .alert-icon { font-size: 48px; margin-bottom: 12px; }
+  .alert-title { font-size: 20px; font-weight: 700; color: var(--danger); margin-bottom: 8px; }
+  .alert-level { font-family: var(--mono); font-size: 36px; font-weight: 700; color: var(--danger); margin-bottom: 4px; }
+  .alert-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+  .alert-tips { background: var(--surface2); border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: left; }
+  .alert-tips p { font-size: 13px; color: var(--text); line-height: 1.8; }
+  .alert-close {
+    background: var(--danger);
+    color: #fff;
+    border: none; cursor: pointer;
+    font-family: var(--font);
+    font-weight: 700; font-size: 14px;
+    padding: 12px 32px;
+    border-radius: 100px;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  .alert-close:hover { opacity: 0.85; }
+
   .bottom-note { text-align: center; font-size: 11px; color: var(--muted); margin-top: 24px; line-height: 1.6; }
 </style>
 </head>
@@ -408,6 +456,25 @@
   </p>
 </div>
 
+<!-- Alerta de fatiga alta -->
+<div class="fatigue-alert-overlay" id="fatigueAlert">
+  <div class="fatigue-alert-box">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-title">¡Nivel de fatiga visual alto!</div>
+    <div class="alert-level" id="alertLevel">—</div>
+    <div class="alert-sub">El ambiente actual tiene condiciones que pueden causar fatiga visual significativa. Te recomendamos tomar medidas inmediatas.</div>
+    <div class="alert-tips">
+      <p>
+        👁️ Aplica la regla 20-20-20: cada 20 min mira a 20 pies por 20 segundos<br>
+        💡 Ajusta la iluminación del ambiente<br>
+        🪟 Busca luz natural si es posible<br>
+        😌 Toma un descanso de 5-10 minutos
+      </p>
+    </div>
+    <button class="alert-close" onclick="closeAlert()">Entendido, tomaré un descanso</button>
+  </div>
+</div>
+
 <script>
 let stream = null;
 let scanCount = 0;
@@ -528,6 +595,7 @@ function updateUI(m) {
   document.getElementById('fatigueValue').textContent = m.fatigue+'%';
   document.getElementById('fatigueLabel').textContent = m.fatigue<30?'✅ Bajo':m.fatigue<60?'⚠️ Moderado':'🔴 Alto';
   updateProjection(m.fatigue);
+  showFatigueAlert(m.fatigue);
 }
 
 function updateProjection(baseFatigue) {
@@ -552,6 +620,17 @@ function updateProjection(baseFatigue) {
   }).join('') + '</div>';
 
   document.getElementById('projectionContent').innerHTML = html;
+}
+
+function showFatigueAlert(fatigue) {
+  if (fatigue >= 60) {
+    document.getElementById('alertLevel').textContent = fatigue + '%';
+    document.getElementById('fatigueAlert').classList.add('show');
+  }
+}
+
+function closeAlert() {
+  document.getElementById('fatigueAlert').classList.remove('show');
 }
 
 async function analyzeScene() {
@@ -642,4 +721,3 @@ Genera exactamente 3 recomendaciones prácticas para reducir la fatiga visual. R
 </script>
 </body>
 </html>
-
